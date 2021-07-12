@@ -1,0 +1,32 @@
+*** Save a vivado project as a tcl script for recreation
+open_project proj.xpr
+write_project_tcl -target_proj_dir "targetdir" /path/file.tcl
+close_project
+
+source /path/file.tcl
+
+*** Starts the GUI
+start_gui
+
+*** Start in command line
+vivado -mode tcl
+
+*** Run tcl script from command line
+vivado -mode batch -source script.tcl
+
+*** Synth/Build the design
+
+get_runs
+	get all the name runs, default runs are synth_1 and impl_1
+	synth_1 is the synthesis stage
+	impl_1 is the generate bitstream stage
+
+launch_runs impl_1 -to_step write_bitstream -jobs 6
+	build and generate bitstream, this launches a background task
+	use wait_on_run to block until finish
+
+wait_on_run impl_1
+	blocks until run is finished
+
+*** Write the XSA file out 
+write_hw_platform -fixed -include_bit -force -file /path/file.xsa

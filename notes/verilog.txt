@@ -1,0 +1,32 @@
+including modules:
+	It is not mandatory to include all of the source files (.v) in the project,
+	various programs will compile it by going out and look up the files in the
+	workspace directory as it compiles..
+	However, this will kind of act like C by making it very lenient on what it accepts.
+	Generally the compilation output will give you what you want in terms of behavior, 
+	but it is not valid code.
+
+	An example:
+	top.v
+	module top(output reg v);
+		test t(v);
+	endmodule
+	
+	t.v 
+	module t(output reg v);
+
+	This will compile if one doesn't include t.v in the project but will fail
+	if one does.
+
+reset signal:
+	If the construct is looking for negative edge for reset switch or something
+	the first statement must always be a conditional or else it won't even
+	compile.
+	always @ (posedge clk or negedge rst) begin
+		if (!rst) begin
+			...
+		end
+		else begin
+			...
+		end
+	end

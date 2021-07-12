@@ -1,0 +1,22 @@
+vivado files:
+	.bit: bit file for temporary chipscope
+	.mcs: bitstream file
+	.ucf: pin assignment file
+	.hdf: hardware description file (deprecated)
+	.xsa: hardware description file (superseded .hdf files),
+	      describes things like processor configuration, address mapping,
+		  device initialization nodes, etc, this is a zip file in disguise
+	.xdc: design constraint file template 
+	.xci: stores IP customizations
+	.Xil/: a temporary directory that caches things to speed up runs, cannot delete it while running
+	.xpfm: importable vitis platform project file
+	.wcfg: display waveform configuration, tells which signals we like to watch, generated in behavioral simulation
+
+vitis files:
+	.mss: ini like file that describes all the driver versions that a software domain will use
+
+ise: superseded by vivado, old version of the HDL tool
+
+sdsoc/sdaccel: superseded by vitis
+
+microblaze: soft processor core, similar to a risc processor

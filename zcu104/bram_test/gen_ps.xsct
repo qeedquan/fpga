@@ -1,0 +1,44 @@
+#!/usr/bin/env xsct
+
+set xsa_file "zcu104_pl.xsa"
+set platform "zcu104_ps"
+set xpfm_file ${platform}/export/${platform}/${platform}.xpfm
+set bit_file ${platform}/hw/zcu104_pl.bit
+set workspace "."
+set build_config "debug"
+set build_config_dir [string totitle $build_config]
+
+setws $workspace
+platform create -name $platform -hw $xsa_file
+platform active $platform
+
+domain create -name "standalone_r53" -os standalone -proc psu_cortexa53_0
+bsp config stdin psu_uart_0
+bsp config stdout psu_uart_0
+
+domain create -name "standalone_r5" -os standalone -proc psu_cortexr5_0
+bsp config stdin psu_uart_1
+bsp config stdout psu_uart_1
+
+platform generate
+
+app create -name app_r53 -template {Memory Tests} -platform ${platform} -domain standalone_r53
+app create -name app_r5 -template {Empty Application} -platform ${platform} -domain standalone_r5
+
+app config -name app_r53 build-config ${build_config}
+app config -name app_r5 build-config ${build_config}
+
+importsources -name app_r53 -path src/r53 -linker-script
+importsources -name app_r5 -path src/r5 -linker-script
+
+app config -name app_r53 include-path ${platform}/export/${platform}/sw/${platform}/standalone_r53/bspinclude/include
+app config -name app_r5 include-path ${platform}/export/${platform}/sw/${platform}/standalone_r5/bspinclude/include
+
+app build -name app_r53
+app build -name app_r5
+
+exec cp ${platform}/export/${platform}/sw/${platform}/boot/fsbl.elf ${workspace}
+exec cp ${platform}/hw/zcu104_pl.bit ${workspace}
+exec cp app_r53/${build_config_dir}/app_r53.elf ${workspace}
+exec cp app_r5/${build_config_dir}/app_r5.elf ${workspace}
+exec bootgen -arch zynqmp -image boot.bif -w -o i BOOT.BIN
