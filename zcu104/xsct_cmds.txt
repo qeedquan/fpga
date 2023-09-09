@@ -1,0 +1,2 @@
+*** Updates current platform project to account for changes in hardware config
+platform config -updatehw file.xsa

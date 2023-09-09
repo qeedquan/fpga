@@ -1,0 +1,8 @@
+// bootgen -arch zynqmp -image boot.bif -w -o i BOOT.BIN
+the_ROM_image:
+{
+	[bootloader, destination_cpu=a53-0] fsbl.elf
+	[destination_device=pl] zcu104_pl.bit
+	[destination_cpu=a53-0] app_r53.elf
+	[destination_cpu=r5-0] app_r5.elf
+}

@@ -1,0 +1,49 @@
+*** use dhcp to setup ip
+dhcp
+
+*** setup ip manually
+setenv ipaddr 10.0.2.15; setenv netmask 255.0.0.0; setenv serverip 10.0.2.2
+
+*** load something over tftp
+tftpboot <address> <filename>
+
+*** load boot.scr into memory over tftp and run the script
+tftpboot 0xc0000 bootscr.img; source 0xc0000
+
+*** load uboot image over tftp and run it
+tftpboot 0x1000000 image.ub
+bootm 0x1000000
+
+*** boot command types
+booti - raw image
+bootm - mkimage created images
+bootz - gz compressed images
+
+*** generate u-boot image script for use with 'source' command
+mkimage -T script -C none -n 'Boot Script File' -d boot.scr bootscr.img
+
+*** load image from SD card using FAT filesystem
+fatload mmc <partition:sub_partition> <address> <filename>
+fatload mmc 0:1 0x3000000 uImage
+
+*** environment variables
+printenv - print environment variables
+    printenv [name]
+saveenv  - save environment variables
+setenv   - set environment variables
+    setenv [name] [value]
+bdinfo   - print board info
+
+*** memory commands
+base  - print or set address offset
+crc32 - checksum calculation
+cmp   - memory compare
+cp    - memory copy
+cmp   - memory compare
+md    - memory display
+mw    - memory write (fill)
+loop  - infinite loop on address range
+
+*** network commands
+ping - send ping requests
+
